@@ -1,34 +1,60 @@
 /* globals __DEV__ */
-import Phaser from 'phaser'
-import Mushroom from '../sprites/Mushroom'
-import {setResponsiveWidth} from '../utils'
+import Phaser from 'phaser';
+import Mushroom from '../sprites/Mushroom';
+import Player from '../sprites/Player';
+import {setResponsiveWidth} from '../utils';
 
 export default class extends Phaser.State {
   init () {}
   preload () {}
 
+  //find objects in a Tiled layer that contain a property called "type" equal to a certain value
+  findObjectsByType(type, map, layer) {
+    var result = new Array();
+    map.objects[layer].forEach(function(element) {
+      if (element.type === type) {
+        //Phaser uses top left, Tiled bottom left so we have to adjust
+        //also keep in mind that the cup images are a bit smaller than the tile which is 16x16
+        //so they might not be placed in the exact position as in Tiled
+        element.y -= map.tileHeight;
+        result.push(element);
+      }
+    });
+    return result;
+  }
+
   create () {
-    let banner = this.add.text(this.game.world.centerX, this.game.height - 30, 'Phaser + ES6 + Webpack');
+    let banner = this.add.text(this.game.world.centerX, this.game.height - 30, 'Nausivania');
     banner.font = 'Nunito';
     banner.fontSize = 40;
     banner.fill = '#77BFA3';
     banner.anchor.setTo(0.5);
 
-    this.mushroom = new Mushroom({
+    this.map = this.game.add.tilemap('level1');
+    this.map.addTilesetImage('tiles', 'gameTiles');
+    this.backgroundLayer = this.map.createLayer('background');
+    this.worldLayer = this.map.createLayer('world');
+    this.map.setCollisionBetween(1, 2000, true, 'world');
+    var start = this.findObjectsByType('starting_position', this.map, 'NPCs');
+    this.player = new Player({
       game: this.game,
-      x: this.game.world.centerX,
-      y: this.game.world.centerY,
-      asset: 'mushroom'
+      x: start[0].x,
+      y: start[0].y,
+      asset: 'player',
     });
-
     // set the sprite width to 30% of the game width
-    setResponsiveWidth(this.mushroom, 30, this.game.world);
-    this.game.add.existing(this.mushroom)
+    setResponsiveWidth(this.player, 10, this.game.world);
+    this.game.add.existing(this.player);
+
+  }
+
+  update () {
+    this.game.physics.arcade.collide(this.player, this.worldLayer);
   }
 
   render () {
     if (__DEV__) {
-      this.game.debug.spriteInfo(this.mushroom, 32, 32)
+      this.game.debug.spriteInfo(this.player, 32, 32);
     }
   }
 }
