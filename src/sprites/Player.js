@@ -9,6 +9,7 @@ export default class extends Phaser.Sprite {
     this.anchor.setTo(0.5);
     this.body.collideWorldBounds = true;
     this.body.checkCollision.left = true;
+    this.body.mass = 30;
   }
 
 
