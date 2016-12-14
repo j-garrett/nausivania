@@ -54,17 +54,26 @@ export default class extends Phaser.State {
 
   update () {
     this.game.physics.arcade.collide(this.player, this.worldLayer);
-    if (this.cursors.up.isDown) {
-      this.player.body.y -= 10;
+    if (this.cursors.up.isDown && this.player.body.blocked.down) {
+      this.player.body.velocity.y = -800;
     }
     if (this.cursors.down.isDown) {
-      this.player.body.y += 10;
+      this.player.body.velocity.y += 300 * this.game.time.physicsElapsed;
     }
     if (this.cursors.left.isDown) {
-      this.player.body.x -= 10;
-    }
-    if (this.cursors.right.isDown) {
-      this.player.body.x += 100 * this.game.time.physicsElapsed;
+      this.player.body.velocity.x = -400;
+      // if (this.player.body.velocity.x < -500) {
+      //   this.player.body.velocity.x = -500;
+      // }
+    } else if (this.cursors.right.isDown) {
+      this.player.body.velocity.x = 400;
+      // if (this.player.body.velocity.x > 500) {
+      //   this.player.body.velocity.x = 500;
+      // }
+    } else if (this.player.body.velocity.x > 0) {
+      this.player.body.velocity.x = 0;
+    } else if (this.player.body.velocity.x < 0) {
+      this.player.body.velocity.x = 0;
     }
   }
 

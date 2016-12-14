@@ -7,7 +7,7 @@ export default class extends Phaser.State {
     this.fontsReady = false;
     this.fontsLoaded = this.fontsLoaded.bind(this);
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
-    this.game.physics.arcade.gravity.y = 200;
+    this.game.physics.arcade.gravity.y = 2000;
 
   }
 
@@ -28,12 +28,12 @@ export default class extends Phaser.State {
 
   render () {
     if (this.fontsReady) {
-      this.state.start('Splash')
+      this.state.start('Splash');
     }
   }
 
   fontsLoaded () {
-    this.fontsReady = true
+    this.fontsReady = true;
   }
 
 }
