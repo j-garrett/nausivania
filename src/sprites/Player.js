@@ -8,6 +8,7 @@ export default class extends Phaser.Sprite {
     game.physics.arcade.enable(this);
     this.anchor.setTo(0.5);
     this.body.collideWorldBounds = true;
+    this.body.checkCollision.left = true;
   }
 
 

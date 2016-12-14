@@ -7,7 +7,7 @@ export default class extends Phaser.State {
     this.fontsReady = false;
     this.fontsLoaded = this.fontsLoaded.bind(this);
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
-    this.game.physics.arcade.gravity.y = 100;
+    this.game.physics.arcade.gravity.y = 200;
 
   }
 

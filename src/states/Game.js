@@ -45,11 +45,27 @@ export default class extends Phaser.State {
     // set the sprite width to 30% of the game width
     setResponsiveWidth(this.player, 10, this.game.world);
     this.game.add.existing(this.player);
+    //the camera will follow the player in the world
+    this.game.camera.follow(this.player);
 
+    //move player with cursor keys
+    this.cursors = this.game.input.keyboard.createCursorKeys();
   }
 
   update () {
     this.game.physics.arcade.collide(this.player, this.worldLayer);
+    if (this.cursors.up.isDown) {
+      this.player.body.y -= 10;
+    }
+    if (this.cursors.down.isDown) {
+      this.player.body.y += 10;
+    }
+    if (this.cursors.left.isDown) {
+      this.player.body.x -= 10;
+    }
+    if (this.cursors.right.isDown) {
+      this.player.body.x += 100 * this.game.time.physicsElapsed;
+    }
   }
 
   render () {
