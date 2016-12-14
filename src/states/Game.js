@@ -10,7 +10,7 @@ export default class extends Phaser.State {
 
   //find objects in a Tiled layer that contain a property called "type" equal to a certain value
   findObjectsByType(type, map, layer) {
-    var result = new Array();
+    let result = [];
     map.objects[layer].forEach(function(element) {
       if (element.type === type) {
         //Phaser uses top left, Tiled bottom left so we have to adjust
@@ -35,7 +35,7 @@ export default class extends Phaser.State {
     this.backgroundLayer = this.map.createLayer('background');
     this.worldLayer = this.map.createLayer('world');
     this.map.setCollisionBetween(1, 2000, true, 'world');
-    var start = this.findObjectsByType('starting_position', this.map, 'NPCs');
+    let start = this.findObjectsByType('starting_position', this.map, 'player');
     this.player = new Player({
       game: this.game,
       x: start[0].x,
@@ -43,29 +43,31 @@ export default class extends Phaser.State {
       asset: 'player',
     });
     // set the sprite width to 30% of the game width
-    setResponsiveWidth(this.player, 10, this.game.world);
+    setResponsiveWidth(this.player, 5, this.game.world);
     this.game.add.existing(this.player);
     //the camera will follow the player in the world
     this.game.camera.follow(this.player);
 
     //move player with cursor keys
-    this.cursors = this.game.input.keyboard.createCursorKeys();
+    this.keys = this.game.input.keyboard.createCursorKeys();
+
+    this.keys.spacebar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   }
 
   update () {
     this.game.physics.arcade.collide(this.player, this.worldLayer);
-    if (this.cursors.up.isDown && this.player.body.blocked.down) {
+    if (this.keys.spacebar.isDown && this.player.body.blocked.down) {
       this.player.body.velocity.y = -800;
     }
-    if (this.cursors.down.isDown) {
+    if (this.keys.down.isDown) {
       this.player.body.velocity.y += 300 * this.game.time.physicsElapsed;
     }
-    if (this.cursors.left.isDown) {
+    if (this.keys.left.isDown) {
       this.player.body.velocity.x = -400;
       // if (this.player.body.velocity.x < -500) {
       //   this.player.body.velocity.x = -500;
       // }
-    } else if (this.cursors.right.isDown) {
+    } else if (this.keys.right.isDown) {
       this.player.body.velocity.x = 400;
       // if (this.player.body.velocity.x > 500) {
       //   this.player.body.velocity.x = 500;
