@@ -1,5 +1,5 @@
-import Phaser from 'phaser'
-import { centerGameObjects } from '../utils'
+import Phaser from 'phaser';
+import { centerGameObjects } from '../utils';
 
 export default class extends Phaser.State {
   init () {}
@@ -13,11 +13,14 @@ export default class extends Phaser.State {
     //
     // load your assets
     //
-    this.load.image('mushroom', 'assets/images/mushroom2.png')
+    this.load.image('player', 'assets/images/od.png');
+    this.load.image('mushroom', 'assets/images/mushroom2.png');
+    this.load.tilemap('level1', 'assets/tilemaps/level1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.load.image('gameTiles', '/assets/images/scifi_platformTiles_32x32.png');
   }
 
   create () {
-    this.state.start('Game')
+    this.state.start('Game');
   }
 
 }
