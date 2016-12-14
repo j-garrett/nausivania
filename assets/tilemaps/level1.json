@@ -70,7 +70,7 @@
          "imageheight":736,
          "imagewidth":1120,
          "margin":0,
-         "name":"scifi_platformTiles_32x32",
+         "name":"tiles",
          "spacing":0,
          "tilecount":805,
          "tileheight":32,
