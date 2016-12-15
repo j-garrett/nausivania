@@ -10,11 +10,28 @@ export default class extends Phaser.Sprite {
     this.body.collideWorldBounds = true;
     this.body.checkCollision.left = true;
     this.body.mass = 30;
+
+    this.climbing = false;
   }
 
-
-
   update () {
+  }
+
+  startClimbing() {
+      if (this.climbing) return;
+
+      console.log("startClimbing", this.body.gravity);
+      this.climbing = true;
+      this.body.allowGravity = false;
+      this.body.velocity.setTo(0);
+  }
+
+  stopClimbing() {
+      if (!this.climbing) return;
+
+      console.log("stopClimbing");
+      this.climbing = false;
+      this.body.allowGravity = true;
   }
 
 }
