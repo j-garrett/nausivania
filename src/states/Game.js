@@ -24,6 +24,7 @@ export default class extends Phaser.State {
     this.map.addTilesetImage('fleshTiles', 'gameFleshTiles');
     this.map.addTilesetImage('fleshBackground', 'gameFleshBackground');
 
+    this.game.world.setBounds(0, 0, this.map.width * this.map.tileWidth, this.map.height * this.map.tileHeight);
 
     this.backgroundLayer = this.map.createLayer('background');
     this.overlayOfFleshBackgroundLayer = this.map.createLayer('overlayOfFleshBackground');
