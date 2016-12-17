@@ -45,11 +45,11 @@ export default class extends Phaser.State {
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.keys.spacebar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SHIFT);
-
-    this.weapon = this.game.add.weapon(8, 'rayblast');
-    this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-    this.weapon.bulletSpeed = 450;
-    this.weapon.fireRate = 1500;
+    this.weapon = this.game.add.weapon(3, 'rayblast');
+    this.weapon.bulletKillDistance = 200;
+    this.weapon.bulletKillType = Phaser.Weapon.KILL_DISTANCE;
+    this.weapon.bulletSpeed = 400;
+    this.weapon.fireRate = 500;
     this.weapon.bulletGravity.y = -2000;
     this.weapon.trackSprite(this.player, 70, 0, true);
   }
