@@ -18,6 +18,8 @@ export default class extends Phaser.State {
     this.load.image('mushroom', 'assets/images/mushroom2.png');
     this.load.tilemap('level1', 'assets/tilemaps/level1.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.image('gameTiles', '/assets/images/scifi_platformTiles_32x32.png');
+    this.load.image('gameFleshTiles', '/assets/tilemaps/livingTissueTiles/tileset.png');
+    this.load.image('gameFleshBackground', '/assets/tilemaps/livingTissueTiles/background.png');
   }
 
   create () {

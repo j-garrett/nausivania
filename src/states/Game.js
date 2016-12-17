@@ -21,7 +21,13 @@ export default class extends Phaser.State {
 
     this.map = this.game.add.tilemap('level1');
     this.map.addTilesetImage('tiles', 'gameTiles');
+    this.map.addTilesetImage('fleshTiles', 'gameFleshTiles');
+    this.map.addTilesetImage('fleshBackground', 'gameFleshBackground');
+
+
     this.backgroundLayer = this.map.createLayer('background');
+    this.overlayOfFleshBackgroundLayer = this.map.createLayer('overlayOfFleshBackground');
+    this.fleshBackgroundLayer = this.map.createLayer('fleshBackground');
     this.worldLayer = this.map.createLayer('world');
     this.map.setCollisionBetween(1, 2000, true, 'world');
 
