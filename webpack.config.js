@@ -8,8 +8,13 @@ var phaser = path.join(phaserModule, 'build/custom/phaser-split.js');
 var pixi = path.join(phaserModule, 'build/custom/pixi.js');
 var p2 = path.join(phaserModule, 'build/custom/p2.js');
 
-var definePlugin = new webpack.DefinePlugin({
-  __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true'))
+let configName = (process.env.GAME_CONFIG || 'default').trim();
+
+let gameConfig = require('./game_configs/' + configName);
+
+const definePlugin = new webpack.DefinePlugin({
+    __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
+    __GAME_CONFIG__: JSON.stringify(gameConfig)
 });
 
 module.exports = {
