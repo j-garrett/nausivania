@@ -42,8 +42,16 @@ export default class extends Phaser.State {
 
     //move player with cursor keys
     this.keys = this.game.input.keyboard.createCursorKeys();
-
+    this.cursors = this.game.input.keyboard.createCursorKeys();
     this.keys.spacebar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SHIFT);
+
+    this.weapon = this.game.add.weapon(8, 'rayblast');
+    this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+    this.weapon.bulletSpeed = 450;
+    this.weapon.fireRate = 1500;
+    this.weapon.bulletGravity.y = -2000;
+    this.weapon.trackSprite(this.player, 70, 0, true);
   }
 
 
@@ -94,6 +102,9 @@ export default class extends Phaser.State {
         } else if (this.player.body.velocity.x < 0) {
             this.player.body.velocity.x = 0;
         }
+    }
+    if (this.fireButton.isDown) {
+      this.weapon.fire();
     }
   }
 
