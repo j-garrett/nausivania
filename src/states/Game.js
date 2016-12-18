@@ -39,10 +39,10 @@ export default class extends Phaser.State {
       game: this.game,
       x: start[0].x,
       y: start[0].y,
-      asset: 'player',
+      asset: 'mummy',
     });
-    // set the sprite width to 30% of the game width
-    setResponsiveWidth(this.player, 5, this.game.world);
+    // set the sprite width to 50% of the game width
+    // this.player.scale.setTo(0.5);
     this.game.add.existing(this.player);
     //the camera will follow the player in the world
     this.game.camera.follow(this.player);
@@ -53,14 +53,50 @@ export default class extends Phaser.State {
     this.keys.spacebar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SHIFT);
     this.weapon = this.game.add.weapon(3, 'rayblast');
-    this.weapon.bulletKillDistance = 200;
+    this.weapon.trackRotation = true;
+    this.weapon.bulletKillDistance = 400;
     this.weapon.bulletKillType = Phaser.Weapon.KILL_DISTANCE;
-    this.weapon.bulletSpeed = 400;
+    this.weapon.bulletSpeed = 600;
+    this.weapon.bulletInheritSpriteSpeed = true;
     this.weapon.fireRate = 500;
     this.weapon.bulletGravity.y = -2000;
-    this.weapon.trackSprite(this.player, 70, 0, true);
+    this.weapon.trackSprite(this.player, 70, 0, false);
+    this.weapon.fireAngle = 0;
+    // // this.sprite = this.add.sprite(40, 100, 'mummy');
+    // this.mummyWalkLeft = this.add.sprite(40, 100, 'mummyReverse');
+    // this.mummyWalkLeft.animations.add('walkLeft');
+    this.player.animations.add('walk');
+    this.player.animations.add('walkLeft');
+
+    this.keys.left.onDown.add(this.walkLeftAnimation, this);
+    this.keys.right.onDown.add(this.walkRightAnimation, this);
+    this.keys.left.onUp.add(this.backToIdleLeft, this);
+    this.keys.right.onUp.add(this.backToIdleRight, this);
   }
 
+  walkLeftAnimation () {
+    this.weapon.fireAngle = 180;
+    this.weapon.trackSprite(this.player, -70, 0, false);
+
+    this.player.loadTexture('mummyReverse', 0);
+    this.player.animations.play('walkLeft', 20, true);
+  }
+
+  walkRightAnimation () {
+    this.weapon.fireAngle = 0;
+    this.weapon.trackSprite(this.player, 70, 0, false);
+
+    this.player.loadTexture('mummy', 0);
+    this.player.animations.play('walk', 20, true);
+  }
+
+  backToIdleLeft () {
+    this.player.animations.play('walk', 0, true);
+  }
+
+  backToIdleRight () {
+    this.player.animations.play('walkLeft', 0, true);
+  }
 
   update () {
     const deltaTime = this.game.time.physicsElapsed;
@@ -95,12 +131,14 @@ export default class extends Phaser.State {
         }
 
         if (this.keys.left.isDown) {
-            this.player.body.velocity.x = -400;
+            this.player.body.velocity.x = -300;
             // if (this.player.body.velocity.x < -500) {
             //   this.player.body.velocity.x = -500;
             // }
         } else if (this.keys.right.isDown) {
-            this.player.body.velocity.x = 400;
+            this.player.body.velocity.x = 300;
+
+
             // if (this.player.body.velocity.x > 500) {
             //   this.player.body.velocity.x = 500;
             // }
