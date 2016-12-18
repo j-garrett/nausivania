@@ -27,10 +27,12 @@ export default class extends Phaser.State {
     this.game.world.setBounds(0, 0, this.map.width * this.map.tileWidth, this.map.height * this.map.tileHeight);
 
     this.backgroundLayer = this.map.createLayer('background');
-    this.overlayOfFleshBackgroundLayer = this.map.createLayer('overlayOfFleshBackground');
-    this.fleshBackgroundLayer = this.map.createLayer('fleshBackground');
+
     this.worldLayer = this.map.createLayer('world');
-    this.map.setCollisionBetween(1, 2000, true, 'world');
+    this.map.setCollisionBetween(1, 2000, true, this.worldLayer);
+
+    this.platformsLayer = this.map.createLayer('platforms');
+    this.map.setCollisionBetween(1, 2000, true, this.platformsLayer);
 
     this.ladders = findBoundingBoxesByType('ladder', this.map, 'ladders');
 
@@ -100,6 +102,13 @@ export default class extends Phaser.State {
 
   update () {
     const deltaTime = this.game.time.physicsElapsed;
+
+    //Do platforms and ladders first, then we'll check against collision with objects later.
+    this.player.body.checkCollision = { up: false, down: true, left: false, right: false };
+    this.game.physics.arcade.collide(this.player, this.platformsLayer);
+
+    //Reset back to normal tracking for everything else
+    this.player.body.checkCollision = { up: true, down: true, left: true, right: true };
 
     if (this.keys.spacebar.isDown) {
         this.player.stopClimbing();
