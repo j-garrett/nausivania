@@ -20,6 +20,7 @@ export default class extends Phaser.State {
     this.load.image('gameTiles', '/assets/images/scifi_platformTiles_32x32.png');
     this.load.image('gameFleshTiles', '/assets/tilemaps/livingTissueTiles/tileset.png');
     this.load.image('gameFleshBackground', '/assets/tilemaps/livingTissueTiles/background.png');
+    this.game.load.spritesheet('mummy', './assets/sprites/Metalslug_mummy37x45.png', 37, 45, 18);
   }
 
   create () {

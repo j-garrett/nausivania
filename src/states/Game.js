@@ -51,115 +51,13 @@ export default class extends Phaser.State {
 
     //move player with cursor keys
     this.keys = this.game.input.keyboard.createCursorKeys();
-    this.cursors = this.game.input.keyboard.createCursorKeys();
     this.keys.spacebar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SHIFT);
-    this.weapon = this.game.add.weapon(3, 'rayblast');
-    this.weapon.trackRotation = true;
-    this.weapon.bulletKillDistance = 400;
-    this.weapon.bulletKillType = Phaser.Weapon.KILL_DISTANCE;
-    this.weapon.bulletSpeed = 600;
-    this.weapon.bulletInheritSpriteSpeed = true;
-    this.weapon.fireRate = 500;
-    this.weapon.bulletGravity.y = -2000;
-    this.weapon.trackSprite(this.player, 70, 0, false);
-    this.weapon.fireAngle = 0;
-    // // this.sprite = this.add.sprite(40, 100, 'mummy');
-    // this.mummyWalkLeft = this.add.sprite(40, 100, 'mummyReverse');
-    // this.mummyWalkLeft.animations.add('walkLeft');
-    this.player.animations.add('walk');
-    this.player.animations.add('walkLeft');
-
-    this.keys.left.onDown.add(this.walkLeftAnimation, this);
-    this.keys.right.onDown.add(this.walkRightAnimation, this);
-    this.keys.left.onUp.add(this.backToIdleLeft, this);
-    this.keys.right.onUp.add(this.backToIdleRight, this);
-  }
-
-  walkLeftAnimation () {
-    this.weapon.fireAngle = 180;
-    this.weapon.trackSprite(this.player, -70, 0, false);
-
-    this.player.loadTexture('mummyReverse', 0);
-    this.player.animations.play('walkLeft', 20, true);
-  }
-
-  walkRightAnimation () {
-    this.weapon.fireAngle = 0;
-    this.weapon.trackSprite(this.player, 70, 0, false);
-
-    this.player.loadTexture('mummy', 0);
-    this.player.animations.play('walk', 20, true);
-  }
-
-  backToIdleLeft () {
-    this.player.animations.play('walk', 0, true);
-  }
-
-  backToIdleRight () {
-    this.player.animations.play('walkLeft', 0, true);
+    this.keys.fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SHIFT);
   }
 
   update () {
-    const deltaTime = this.game.time.physicsElapsed;
-
-    //Do platforms and ladders first, then we'll check against collision with objects later.
-    this.player.body.checkCollision = { up: false, down: true, left: false, right: false };
-    this.game.physics.arcade.collide(this.player, this.platformsLayer);
-
-    //Reset back to normal tracking for everything else
-    this.player.body.checkCollision = { up: true, down: true, left: true, right: true };
-
-    if (this.keys.spacebar.isDown) {
-        this.player.stopClimbing();
-    } else if (this.keys.up.isDown && !this.player.climbing) {
-      console.log("Up key pressed");
-        if (checkOverlap(this.player, this.ladders)) {
-          this.player.startClimbing();
-        }
-    }
-
-    // Different physics and controls when climbing a ladder
-    if (this.player.climbing) {
-      const climbSpeed = 150;
-
-      if (this.keys.up.isDown) {
-        this.player.y -= climbSpeed * deltaTime;
-      } else if (this.keys.down.isDown) {
-        this.player.y += climbSpeed * deltaTime;
-      }
-    } else {
-      // Movement not on a ladder
-
-        this.game.physics.arcade.collide(this.player, this.worldLayer);
-
-        if (this.keys.spacebar.isDown && this.player.body.blocked.down) {
-            this.player.stopClimbing();
-
-            this.player.body.velocity.y = -800;
-        }
-
-        if (this.keys.left.isDown) {
-            this.player.body.velocity.x = -300;
-            // if (this.player.body.velocity.x < -500) {
-            //   this.player.body.velocity.x = -500;
-            // }
-        } else if (this.keys.right.isDown) {
-            this.player.body.velocity.x = 300;
-
-
-            // if (this.player.body.velocity.x > 500) {
-            //   this.player.body.velocity.x = 500;
-            // }
-        } else if (this.player.body.velocity.x > 0) {
-            this.player.body.velocity.x = 0;
-        } else if (this.player.body.velocity.x < 0) {
-            this.player.body.velocity.x = 0;
-        }
-    }
-    if (this.fireButton.isDown) {
-      this.weapon.fire();
-    }
+    //Not sure if I just want to give the player references to these objects and let it do its stuff in its own update function
+    this.player.doMovement(this.keys, this.worldLayer, this.platformsLayer, this.ladders);
   }
 
   render () {

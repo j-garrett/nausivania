@@ -24,8 +24,6 @@ export default class extends Phaser.State {
 
     this.load.image('loaderBg', './assets/images/loader-bg.png');
     this.load.image('loaderBar', './assets/images/loader-bar.png');
-    this.game.load.spritesheet('mummy', './assets/sprites/Metalslug_mummy37x45.png', 37, 45, 18);
-    this.game.load.spritesheet('mummyReverse', './assets/sprites/reverseMummyWalk.png', 37, 45, 18);
 
   }
   create () {
