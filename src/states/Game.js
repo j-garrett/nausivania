@@ -66,6 +66,8 @@ export default class extends Phaser.State {
         game.time.events.loop(500, function(){
             this.shuffleLava();
         }, this);
+
+        this.createHealthText();
     }
 
     update() {
@@ -73,6 +75,21 @@ export default class extends Phaser.State {
         this.player.doMovement(this.keys, this.layers);
 
 
+        this.updateHealthText();
+    }
+
+    createHealthText() {
+        let text = this.game.add.text(10, 100, "0", { font: 'bold 45px Arial', fill: '#00ff00' });
+
+        text.anchor.set(0, 0);
+
+        text.fixedToCamera = true;
+
+        this.healthText = text;
+    }
+
+    updateHealthText() {
+        this.healthText.text = "Health: " + this.player.health;
     }
 
     shuffleLava() {

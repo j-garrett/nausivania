@@ -13,6 +13,11 @@ const FacingDirection = {
     RIGHT: 1
 };
 
+const BURN_IN_LAVA_REPEAT_DELAY = 500;
+
+const BURN_IN_LAVA_DAMAGE_MIN = 5;
+const BURN_IN_LAVA_DAMAGE_MAX = 8;
+
 export default class extends Phaser.Sprite {
 
     constructor({game, x, y, asset}) {
@@ -24,6 +29,10 @@ export default class extends Phaser.Sprite {
         this.body.mass = 30;
 
         this.movementSpeed = 300;
+
+        this.health = 100;
+
+        this.lastLavaDamage = 0;
 
         this.loadTexture('mummy', 0);
 
@@ -88,7 +97,7 @@ export default class extends Phaser.Sprite {
             // Movement not on a ladder
 
             this.game.physics.arcade.collide(this, layers.world);
-            this.game.physics.arcade.collide(this, layers.lavaBase);
+            this.game.physics.arcade.collide(this, layers.lavaBase, this.lavaCollide, null, this);
 
             if (keys.spacebar.isDown && this.body.blocked.down) {
                 this.stopClimbing();
@@ -154,4 +163,29 @@ export default class extends Phaser.Sprite {
         this.body.allowGravity = true;
     }
 
+    lavaCollide() {
+        if (this.lastLavaDamage + BURN_IN_LAVA_REPEAT_DELAY < this.game.time.now) {
+            this.dealDamage(this.game.rnd.integerInRange(BURN_IN_LAVA_DAMAGE_MIN, BURN_IN_LAVA_DAMAGE_MAX));
+            this.lastLavaDamage = this.game.time.now;
+        }
+    }
+
+    dealDamage(damage) {
+        if (damage <= 0) {
+            return;
+        }
+        this.health -= damage;
+
+        let xOffset = this.width * 0.5;
+        let x = this.x + this.game.rnd.integerInRange(-xOffset, xOffset);
+
+        let yOffset = this.width * 0.7;
+        let y = this.y + this.game.rnd.integerInRange(-yOffset, yOffset);
+
+        let text = this.game.add.text(x, y, "-" + damage, { font: 'bold 25px Arial', fill: '#ff0000' });
+
+        text.anchor.setTo(0.5, 0.5);
+
+        game.time.events.add(Phaser.Timer.SECOND * 0.7, text.destroy, text);
+    }
 }
