@@ -56,12 +56,12 @@ export default class extends Phaser.Sprite {
     update() {
     }
 
-    doMovement(keys, worldLayer, platformsLayer, ladders) {
+    doMovement(keys, layers) {
         const deltaTime = this.game.time.physicsElapsed;
 
         //Do platforms and ladders first, then we'll check against collision with objects later.
         this.body.checkCollision = {up: false, down: true, left: false, right: false};
-        this.game.physics.arcade.collide(this, platformsLayer);
+        this.game.physics.arcade.collide(this, layers.platforms);
 
         //Reset back to normal tracking for everything else
         this.body.checkCollision = {up: true, down: true, left: true, right: true};
@@ -70,7 +70,7 @@ export default class extends Phaser.Sprite {
             this.stopClimbing();
         } else if (keys.up.isDown && !this.climbing) {
             console.log("Up key pressed");
-            if (checkOverlap(this, ladders)) {
+            if (checkOverlap(this, layers.ladders)) {
                 this.startClimbing();
             }
         }
@@ -87,7 +87,8 @@ export default class extends Phaser.Sprite {
         } else {
             // Movement not on a ladder
 
-            this.game.physics.arcade.collide(this, worldLayer);
+            this.game.physics.arcade.collide(this, layers.world);
+            this.game.physics.arcade.collide(this, layers.lavaBase);
 
             if (keys.spacebar.isDown && this.body.blocked.down) {
                 this.stopClimbing();
