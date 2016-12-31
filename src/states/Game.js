@@ -23,7 +23,7 @@ export default class extends Phaser.State {
         banner.anchor.setTo(0.5);
 
         this.map = this.game.add.tilemap('level1');
-        this.map.addTilesetImage('tiles', 'gameTiles');
+        this.defaultTileset = this.map.addTilesetImage('tiles', 'gameTiles');
 
         this.layers = { world: null, background: null, platforms: null, lava: null, ladders: null };
 
@@ -63,7 +63,9 @@ export default class extends Phaser.State {
         this.keys.spacebar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.keys.fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SHIFT);
 
-        game.input.onDown.addOnce(this.shuffleLava, this);
+        game.time.events.loop(500, function(){
+            this.shuffleLava();
+        }, this);
     }
 
     update() {
@@ -74,20 +76,26 @@ export default class extends Phaser.State {
     }
 
     shuffleLava() {
-        this.shuffleTiles([624, 625, 626]); //, this.layers.lavaTop);
-        //this.shuffleTiles([298, 299, 300, 333, 334, 335, 368, 369, 370]);//, this.layers.lavaBase);
+        this.shuffleTiles([222, 223, 224], this.layers.lavaTop); //, this.layers.lavaTop);
+        this.shuffleTiles([298, 299, 300, 333, 334, 335, 368, 369, 370], this.layers.lavaBase);
     }
 
+    /**
+     * Definitely not the most optimal to shuffle tiles. We could be calling getTile and caching this.
+     *
+     * @param {number[]} tiles - Array of tile indexes to swap
+     * @param {Phaser.TilemapLayer} layer
+     */
     shuffleTiles(tiles, layer) {
-        for (let t = 0; t < tiles.length; t++) {
-            let a = tiles[t];
-            let b = tiles[this.game.rnd.integerInRange(0, tiles.length-1)];
+        for (let x = 0; x < this.map.width; x++) {
+            for (let y = 0; y < this.map.height; y++) {
+                let tile = this.map.getTile(x, y, layer);
 
-            b = tiles[0];
-
-            this.map.swap(a, b);
-
-            console.log("Swapped " + a + " : " + b);
+                if (tile != null) {
+                    let newTile = tiles[this.game.rnd.integerInRange(0, tiles.length-1)] + this.defaultTileset.firstgid;
+                    this.map.putTile(newTile, x, y, layer);
+                }
+            }
         }
     }
 
